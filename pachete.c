@@ -129,6 +129,25 @@ void ordonare_pachete(pachet* pac, int nrP) {
     //Si asta cred ca e ok(asta nici nu e testata)
 }
 
+//Cerinta I 5.
+void codificare_mesaj(char* mesaj){
+    char* p = strtok(mesaj," ,.;:?!");
+    char a[100][100];
+
+    int cnt=0;
+    while (p != NULL) {
+      strcpy(a[cnt], p);
+      p = strtok(NULL, " ,.;:?!");
+      cnt++;
+    }
+    strcpy(mesaj,NULL);
+    for (int i = cnt-1; i >= 0; i--) {
+      strcat(mesaj, a[i]);
+    }
+    printf("%s\n",mesaj);
+}
+
+
 int main(void) {
     int nrC, nrP;
     cartier* cart;
@@ -156,5 +175,8 @@ int main(void) {
     }
 
     distribuire_pachete(pac, &postas, nrC, nrP);
-    
+
+    for (int i = 0; i < nrP; i++) {
+        codificare_mesaj(pac->mesaj);
+    }
 }
