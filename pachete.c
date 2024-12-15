@@ -131,6 +131,8 @@ void ordonare_pachete(pachet* pac, int nrP) {
 
 //Cerinta I 5.
 void codificare_mesaj(char* mesaj){
+
+    mesaj[strlen(mesaj)-1] = '\0';
     char* p = strtok(mesaj," ,.;:?!");
     char a[100][100];
 
@@ -140,11 +142,11 @@ void codificare_mesaj(char* mesaj){
       p = strtok(NULL, " ,.;:?!");
       cnt++;
     }
-    strcpy(mesaj,NULL);
+    mesaj[0]='\0';
     for (int i = cnt-1; i >= 0; i--) {
       strcat(mesaj, a[i]);
     }
-    printf("%s\n",mesaj);
+    //test: printf("%s\n",mesaj);
 }
 
 
@@ -156,17 +158,22 @@ int main(void) {
 
     input_cartiere_pachete(&nrC, &nrP, &cart, &pac);
     //Task1
+
     for (int i = 0; i < nrC; i++) {
         printf("%d %s\n", i, cart[i].nume);
     }
     for (int i = 0; i < nrP; i++) {
         printf("%d\n", pac[i].id);
+
         for (int j = 0; j < 18; j++) {
+            if (j == 17) {
+                printf("%d", pac[i].adresa[j]);
+                break;
+            }
             printf("%d ", pac[i].adresa[j]);
         }
         printf("\n");
-        printf("%d %.3f", pac[i].prioritate, pac[i].greutate);
-        printf("\n");
+        printf("%d %.3f\n", pac[i].prioritate, pac[i].greutate);
         printf("%s", pac[i].mesaj);
     }
 
@@ -177,6 +184,6 @@ int main(void) {
     distribuire_pachete(pac, &postas, nrC, nrP);
 
     for (int i = 0; i < nrP; i++) {
-        codificare_mesaj(pac->mesaj);
+        codificare_mesaj(pac[i].mesaj);
     }
 }
