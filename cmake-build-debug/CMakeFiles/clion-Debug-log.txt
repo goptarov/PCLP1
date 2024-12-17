@@ -1,4 +1,6 @@
-/home/gabi/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/gabi/.local/share/JetBrains/Toolbox/apps/clion/bin/ninja/linux/x64/ninja -G Ninja -S /home/gabi/CLionProjects/tema1 -B /home/gabi/CLionProjects/tema1/cmake-build-debug
--- Configuring done (0.0s)
--- Generating done (0.0s)
--- Build files have been written to: /home/gabi/CLionProjects/tema1/cmake-build-debug
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /mnt/c/Users/ggopt/CLionProjects/PCLP1 -B /mnt/c/Users/ggopt/CLionProjects/PCLP1/cmake-build-debug
+CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
+  CMake 3.30 or higher is required.  You are running version 3.22.1
+
+
+-- Configuring incomplete, errors occurred!
