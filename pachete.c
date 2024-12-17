@@ -17,7 +17,7 @@ typedef struct {
     int prioritate; //valoare de la 1 la 5. 5 fiind prioritatea maxima.
     float greutate;
     char* mesaj; //mesajul se termina cu '\n'
-    int codificare;
+    int cod;
 }pachet;
 
 typedef struct{
@@ -32,12 +32,13 @@ typedef struct{
 void input_cartiere_pachete(int *nrC, int *nrP, cartier** cart, pachet** pac) {
 
     char numetmp[20], mesajtmp[100];
+    int i, j;
 
     //getc(stdin);
     scanf("%d", nrC); //Citim numarul de cartiere si de postasi
     *cart = malloc (sizeof(cartier) * (*nrC));
 
-    for (int i = 0; i < *nrC; i++) {
+    for (i = 0; i < *nrC; i++) {
         (*cart)[i].id = i;
         scanf("%s", numetmp); //Folosim un sir de caractere temporar pentru a stii
         //exact cata memorie sa ii alocam numelui cartierului.
@@ -48,9 +49,9 @@ void input_cartiere_pachete(int *nrC, int *nrP, cartier** cart, pachet** pac) {
     scanf("%d", nrP); //Citim numarul de pachete
     *pac = malloc (sizeof(pachet) * (*nrP));
 
-    for (int i = 0; i < *nrP; i++) {
+    for (i = 0; i < *nrP; i++) {
         (*pac)[i].id = i;
-        for (int j = 0; j < 18; j++) {
+        for (j = 0; j < 18; j++) {
             scanf("%d", &(*pac)[i].adresa[j]);
         }
         scanf("%d", &(*pac)[i].prioritate);
@@ -66,11 +67,12 @@ void input_cartiere_pachete(int *nrC, int *nrP, cartier** cart, pachet** pac) {
 //Cerinta I 2.
 void pachet_info(pachet* pac) {
 
+    int i;
     pac->idCartier=0;
     pac->strada=0;
     pac->numar=0;
 
-    for (int i = 0; i < 18; i++) {
+    for (i = 0; i < 18; i++) {
         if (i <= 4) {
             pac->idCartier += (pac->adresa[i]) * pow(2, 4-i);
         }
@@ -91,68 +93,83 @@ void pachet_info(pachet* pac) {
 //Cerinta I 3.
 void distribuire_pachete(pachet* pac, postas** post, int nrP, int nrC) {
 
-    for (int i = 0; i < nrC; i++) {
+    *post = malloc (sizeof(postas) * nrC);
+    int i, j;
+
+    for (i = 0; i < nrC; i++) {
         (*post)[i].id = i;
         (*post)[i].nrPachete = 0;
-        (*post)[i].pachete = '\0';
+        (*post)[i].pachete = malloc(nrP * sizeof(pachet));
 
-        for (int j = 0; j < nrP; j++){
+        for (j = 0; j < nrP; j++){
+            //printf("%d %d\n", (*post)[i].id, pac[j].idCartier);
             if ((*post)[i].id == pac[j].idCartier) {
-
-                (*post)[i].pachete = realloc((*post)[i].pachete, sizeof(pachet)*((*post)[i].nrPachete+1));//Alocam memorie pentru pachet de fiecare data cand postasul primeste unul.
                 (*post)[i].pachete[(*post)[i].nrPachete] = pac[j];
                 (*post)[i].nrPachete++;
+                //printf("nigga: %d %d\n", (*post)[i].id, (*post)[i].nrPachete);
             }
-
         }
     }
     //Sunt destul de sigur ca merge bine chestia asta
 }
 
 //Cerinta I 4.
-void ordonare_pachete(pachet* pac, int nrP) {
-    int temp;
-    for (int i = 0; i < nrP-1; i++) {
-        if (pac[i].prioritate > pac[i+1].prioritate) {
-            temp = pac[i].prioritate;
-            pac[i].prioritate = pac[i+1].prioritate;
-            pac[i+1].prioritate = temp;
+void ordonare_pachete(postas* post, int nrP, int nrC) {
+    pachet temp;
+    int i, k, l;
+    //Bubble sort pentru organizarea in functie de prioritate
+    for (l = 0; l < post->nrPachete-1; l++) {
+        for (i = 0; i < post->nrPachete-1; i++) {
+            if (post->pachete[i].prioritate < post->pachete[i+1].prioritate) {
+                temp = post->pachete[i];
+                post->pachete[i] = post->pachete[i+1];
+                post->pachete[i+1] = temp;
+            }
         }
     }
-    for (int i = 0; i < nrP-1; i++) {
-        if (pac[i].prioritate == pac[i+1].prioritate && pac[i].greutate <= pac[i+1].greutate) {
-            temp = pac[i].greutate;
-            pac[i].greutate = pac[i+1].greutate;
-            pac[i+1].greutate = temp;
+    //Bubble sort pentru origanizarea in functie de greutate a pachetelor cu acelasi grad de prioritate
+    for (l = 0; l < post->nrPachete-1; l++) {
+        for (i = 0; i < post->nrPachete-1; i++) {
+            if ((post->pachete[i].prioritate == post->pachete[i+1].prioritate) && (post->pachete[i].greutate < post->pachete[i+1].greutate)) {
+                temp = post->pachete[i];
+                post->pachete[i] = post->pachete[i+1];
+                post->pachete[i+1] = temp;
+            }
         }
     }
-    //Si asta cred ca e ok(asta nici nu e testata)
 }
 
 //Cerinta I 5.
-void codificare_mesaj(char* mesaj){
+void formatare_mesaj(char* mesaj){
 
     mesaj[strlen(mesaj)-1] = '\0';
     char* p = strtok(mesaj," ,.;:?!");
     char a[100][100];
 
-    int cnt=0;
+    int cnt=0, i;
     while (p != NULL) {
       strcpy(a[cnt], p);
       p = strtok(NULL, " ,.;:?!");
       cnt++;
     }
     mesaj[0]='\0';
-    for (int i = cnt-1; i >= 0; i--) {
+    for (i = cnt-1; i >= 0; i--) {
       strcat(mesaj, a[i]);
     }
-    //test: printf("%s\n",mesaj);
+    //printf("%s\n",mesaj);
 }
 
-void cryptare_mesaj(){}
+void cod_mesaj(pachet* pac) {
+    int i;
+    pac->cod = 0;
+    for (i = 0; pac->mesaj[i] != '\0'; i++) {
+        pac->cod += ((int)pac->mesaj[i] * i);
+    }
+    pac->cod = pac->cod % ((pac->strada * pac->numar) + 1);
+}
 
 int main(void) {
-    int nrC, nrP, nrCerinta;
+    int nrC, nrP, nrCerinta, i, j;
     cartier* cart;
     pachet* pac;
     postas* postas;
@@ -161,13 +178,13 @@ int main(void) {
     input_cartiere_pachete(&nrC, &nrP, &cart, &pac);
 
     if (nrCerinta == 1) {
-        for (int i = 0; i < nrC; i++) {
+        for (i = 0; i < nrC; i++) {
             printf("%d %s\n", i, cart[i].nume);
         }
-        for (int i = 0; i < nrP; i++) {
+        for (i = 0; i < nrP; i++) {
             printf("%d\n", pac[i].id);
 
-            for (int j = 0; j < 18; j++) {
+            for (j = 0; j < 18; j++) {
                 if (j == 17) {
                     printf("%d", pac[i].adresa[j]);
                     break;
@@ -180,34 +197,64 @@ int main(void) {
         }
     }
 
-    for (int i = 0; i < nrP; i++) { //for pentru a calcula la toate cartierele(altfel nu merg functiile urmatoare)
+    for (i = 0; i < nrP; i++) { //for pentru a calcula la toate cartierele(altfel nu merg functiile urmatoare)
         pachet_info(&pac[i]);
     }
 
     if (nrCerinta == 2) {
-        for (int i = 0; i < nrP; i++) {
+        for (i = 0; i < nrP; i++) {
             printf("%d\n", pac[i].id);
             printf("%d %d %d\n", pac[i].idCartier, pac[i].strada, pac[i].numar);
         }
     }
 
-    distribuire_pachete(pac, &postas, nrC, nrP);
+    distribuire_pachete(pac, &postas, nrP, nrC);
 
     if (nrCerinta == 3) {
-        for (int i = 0; i < nrC; i++) {
+        distribuire_pachete(pac, &postas, nrP, nrC);
+        for (i = 0; i < nrC; i++) {
             printf("%d %d\n", postas[i].id, postas[i].nrPachete);
-            for (int j = 0; j < postas[i].nrPachete; j++) {
-                if (j == postas[i].nrPachete - 1) {
-                    printf("%d", postas[i].pachete[j].id);
-                    break;
+            if (postas[i].nrPachete != 0) {
+                for (j = 0; j < postas[i].nrPachete-1; j++) {
+                    printf("%d ", postas[i].pachete[j].id);
                 }
-                printf("%d ", postas[i].pachete[j].id);
+                printf("%d", postas[i].pachete[postas[i].nrPachete-1].id);
+                printf("\n");
             }
-            printf("\n");
         }
     }
 
-    for (int i = 0; i < nrP; i++) {
-        codificare_mesaj(pac[i].mesaj);
+    for (i = 0; i < nrC; i++) {
+        ordonare_pachete(&postas[i], nrP, nrC);
+    }
+
+    if (nrCerinta == 4) {
+        for (i = 0; i < nrC; i++) {
+            printf("%d %d\n", postas[i].id, postas[i].nrPachete);
+            if (postas[i].nrPachete != 0) {
+                for (j = 0; j < postas[i].nrPachete-1; j++) {
+                    printf("%d ", postas[i].pachete[j].id);
+                }
+                printf("%d", postas[i].pachete[postas[i].nrPachete-1].id);
+                printf("\n");
+            }
+        }
+    }
+    for (j = 0; j < nrC; j++) {
+        for (i = 0; i < postas[j].nrPachete; i++) {
+            formatare_mesaj(postas[j].pachete[i].mesaj);
+            cod_mesaj(&postas[j].pachete[i]);
+        }
+    }
+
+    if (nrCerinta == 5) {
+        for (i = 0; i < nrC; i++) {
+            printf("%d %d\n", postas[i].id, postas[i].nrPachete);
+            for (j = 0; j < postas[i].nrPachete; j++) {
+                if (postas[i].nrPachete != 0) {
+                    printf("%d %d\n", postas[i].pachete[j].id, postas[i].pachete[j].cod);
+                }
+            }
+        }
     }
 }
