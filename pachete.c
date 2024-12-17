@@ -257,5 +257,4 @@ int main(void) {
             }
         }
     }
-    sex
 }
