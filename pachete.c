@@ -116,7 +116,7 @@ void distribuire_pachete(pachet* pac, postas** post, int nrP, int nrC) {
 //Cerinta I 4.
 void ordonare_pachete(postas* post, int nrP, int nrC) {
     pachet temp;
-    int i, k, l;
+    int i, l;
     //Bubble sort pentru organizarea in functie de prioritate
     for (l = 0; l < post->nrPachete-1; l++) {
         for (i = 0; i < post->nrPachete-1; i++) {
