@@ -106,7 +106,7 @@ void distribuire_pachete(pachet* pac, postas** post, int nrP, int nrC) {
             if ((*post)[i].id == pac[j].idCartier) {
                 (*post)[i].pachete[(*post)[i].nrPachete] = pac[j];
                 (*post)[i].nrPachete++;
-                //printf("nigga: %d %d\n", (*post)[i].id, (*post)[i].nrPachete);
+                //printf("%d %d\n", (*post)[i].id, (*post)[i].nrPachete);
             }
         }
     }
@@ -166,6 +166,29 @@ void cod_mesaj(pachet* pac) {
         pac->cod += ((int)pac->mesaj[i] * i);
     }
     pac->cod = pac->cod % ((pac->strada * pac->numar) + 1);
+}
+
+//Cerinta II 6.
+void alterare_cod(int *id) {
+
+}
+void alege_cod(postas* post) {
+    int id, i, tempcode;
+    scanf("%d", &id);
+
+    while (id % 10) {
+        for (i = 0; i < post[id].nrPachete; i++) {
+            tempcode = post[id].pachete[i].cod;
+            while (tempcode) {
+                if (tempcode % 10 == id % 10) {
+                    alterare_cod(&post[id].pachete[i].cod);
+                    break;
+                }
+                tempcode /= 10;
+            }
+        }
+        id /= 10;
+    }
 }
 
 int main(void) {
