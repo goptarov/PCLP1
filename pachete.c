@@ -170,6 +170,26 @@ void cod_mesaj(pachet* pac) {
 
 //Cerinta II 6.
 void alterare_cod(int *id) {
+    int i, j, factori[5], binar[5][5];
+    for (i = 2; i <= *id; i++) {
+        while (*id % i == 0) {
+            *id = *id / i;
+            factori[i]++;
+        }
+    }
+    for (i = 0; i < sizeof(factori); i++) {//Parcurge vectorul cu factori(pozitiile unde nu este 0 sunt factorii numarului)
+        if (factori[i] != 0) {
+            for (j = i; j >= 0; j--) {//Transforma fiecare factor in baza 2
+                if (pow(2,j) <= i) {
+                    binar[i][j] = 0;//Pozitia i este factorul in decimal, iar binar[i] va fi facorul in binar
+                }
+                else {
+                    binar[i][j] = 1;
+                }
+            }
+        }
+    }
+
 
 }
 void alege_cod(postas* post) {
