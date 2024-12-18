@@ -169,45 +169,38 @@ void cod_mesaj(pachet* pac) {
 }
 
 //Cerinta II 6.
-void alterare_cod(int *id) {
-    int i, j, factori[5], binar[5][5];
-    for (i = 2; i <= *id; i++) {
-        while (*id % i == 0) {
-            *id = *id / i;
-            factori[i]++;
-        }
-    }
-    for (i = 0; i < sizeof(factori); i++) {//Parcurge vectorul cu factori(pozitiile unde nu este 0 sunt factorii numarului)
-        if (factori[i] != 0) {
-            for (j = i; j >= 0; j--) {//Transforma fiecare factor in baza 2
-                if (pow(2,j) <= i) {
-                    binar[i][j] = 0;//Pozitia i este factorul in decimal, iar binar[i] va fi facorul in binar
-                }
-                else {
-                    binar[i][j] = 1;
-                }
-            }
-        }
-    }
+int alterare_cod(int id, int cod) {
+    int i;
 
-
+    if (id == 0 || id == 1) {
+        return cod ^ (1 << id);
+    }
+    for (i = 2; i <= id; i++) {
+        if (id % i == 0)
+            cod = cod ^ (1 << id);
+        while (id % i == 0) {
+            id /= i;
+        }
+        if (i > 31) break;
+    }
+    return cod;
 }
-void alege_cod(postas* post) {
-    int id, i, tempcode;
-    scanf("%d", &id);
+void operatie_cod(postas* post) {
+    int id = post->id;
+    int i, tempcode;
+    while (id) {
+        for (i = 0; i < post->nrPachete; i++) {
 
-    while (id % 10) {
-        for (i = 0; i < post[id].nrPachete; i++) {
-            tempcode = post[id].pachete[i].cod;
-            while (tempcode) {
-                if (tempcode % 10 == id % 10) {
-                    alterare_cod(&post[id].pachete[i].cod);
-                    break;
+                tempcode = post->pachete[i].cod;
+                while (tempcode) {
+                    if (tempcode % 10 == id % 10) {
+                        post->pachete[i].cod = alterare_cod(post->id, post->pachete[i].cod);
+                        break;
+                    }
+                    tempcode /= 10;
                 }
-                tempcode /= 10;
-            }
         }
-        id /= 10;
+        id/=10;
     }
 }
 
@@ -291,6 +284,20 @@ int main(void) {
     }
 
     if (nrCerinta == 5) {
+        for (i = 0; i < nrC; i++) {
+            printf("%d %d\n", postas[i].id, postas[i].nrPachete);
+            for (j = 0; j < postas[i].nrPachete; j++) {
+                if (postas[i].nrPachete != 0) {
+                    printf("%d %d\n", postas[i].pachete[j].id, postas[i].pachete[j].cod);
+                }
+            }
+        }
+    }
+    for (i = 0; i < nrC; i++) {
+        operatie_cod(&postas[i]);
+    }
+
+    if (nrCerinta == 6) {
         for (i = 0; i < nrC; i++) {
             printf("%d %d\n", postas[i].id, postas[i].nrPachete);
             for (j = 0; j < postas[i].nrPachete; j++) {
