@@ -351,4 +351,6 @@ int main(void) {
             printf("%d %.3f\n", postas[i].id, scor);
         }
     }
+
+    return 0;
 }
