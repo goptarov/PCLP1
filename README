@@ -1,9 +1,48 @@
-    Cand scrii uita-te la detaliile de la cerinte, de la input si de la output
-    Citeste si ce scrie la precizarile suplimentare inainte de a mai scrie in README
-    Daca nu se precizeaza altfel voi scrie timpul in functie de (prototip functii, bugfixing, edge-cases, dupa ce am
-aflat cum trebuie defapt sa fie testate functiile am implementat in main if-clause + finisarea functiilor(2 ore))
-    Tema asta m-a impins sa invat si lucruri din afara materiei, am petrecut mult timp testand lucruri care nu aveau legatura cu cerinta
-si asa am petrecut mult mai mult timp in IDE decat am petrecut lucrand pentru tema.
+1. Taskul 1 l-am implementat prin functia 'input_cartiere_pachete()', care ia ca parametrii pointeri la nrC(numarul de cartiere), nrP(numarul de pachete),
+   cart(structura cartierului) si pac(structura pachetului). Trimit pointeri si la arrayurile de structuri pentru a le putea aloca dinamic in interiorul functiei.
+   Am realizat mai tarziu ca acest lucru nu era neaparat necesar, doar alocarea dinamica exacta a "mesaj" si "nume", dar nu afecta negativ codul in niciun mod,
+   asa ca am pastrat metoda asta.
+   Functia citeste nrC, apoi intr-un for informatiile cartierului printre care si un sir temporar folosit pentru a stii exact cata memorie trebuia alocata dinamic numelui.
+   Lafel este si citirea pentru pachet.
+   //Mi-a luat mai mult deoarece nu stiam cum sa schimb valoarea unor campuri dintr-un struct intr-o functie, astfel incat aceste schimbari sa persiste. ~ 3 ore.
 
-5. (a).
-   (b).Functia 'cod_mesaj()' ia ca parametru un pachet
+2. Taskul 2 l-am implementat prin functia 'pachet_info()', care ia ca parametru un pointer la structura pachet.
+   Am construit un for care parcurge toata adresa pachetului si am facut operatii pentru a afla valorile in baza 10 a cartierului, id-ului si numelui adresei.
+   //~ 20 min
+
+3. Taskul 3 l-am implementat prin functia 'distribuire_pachete', care ia ca parametrii arrayul de tip pachet, un pointer la arrayul de tip postas(din acelasi motiv ca
+   la task1), nrC si nrP.
+   Am construit un for care parcurge toti postasii(si le atribuie valorile necesare), iar apoi, un nested for in acesta care parcurge toate pachetele si in cazul in care
+   id-ul cartierului pachetului este acelasi cu id-ul postasului, postasul primeste acest pachet si nrPachete creste cu 1.
+   //~ 20 minute algoritmul + 2 ore in care a trebuit sa rezolv probleme cu anumite edge-caseuri.
+
+4. Taskul 4 l-am implementat prin functia 'ordonare_pachete()', care ia ca parametrii un pointer la un struct postas, nrP si nrC.
+   Functia pur si simplu parcurge doua bubble sorturi. Primul in functie de prioritatea pachetelor, al doilea in functie de greutatea acestora(atunci cand prioritatea
+   lor coincide). Al doilea bubble sort functioneaza deoarece toate pachetele cu aceeasi prioritate vor fi una langa alta datorita primei sortari.
+   //~ 30 min.
+
+5. Taskul 5 l-am implementat prin functiile 'cod_mesaj()' care ia ca parametru un pointer la un struct pachet si 'formatare_mesaj()', care ia ca parametru
+   un pointer la primul element al sirului de caractere mesaj.
+   Functia 'formatare_mesaj()' separa toate cuvintele mesajului folosind strtok si intr-o matrice pastreaza pe fiecare linie siruri de caractere cu cuvintele din mesaj. Ulterior,
+   matricea este parcursa invers si mesajul devine un sir cu cuvintele initiale parcurse invers, fara spatii sau alte caractere speciale.
+   Functia 'cod_mesaj()' parcurge mesajul printr-un for si calculeaza codul facand suma dintre produsul fiecarui cod ascii al caracterelor mesajului si pozitia sa in sir.
+   La final, aceasta face un ultim calcul.
+   //Mi-a luat putin mai mult deoarece nu mai stiam cum functioneaza strtok si cum sa prelucrez sirurile de caractere si a trebuit sa caut info pe net(si laburi) ~ 1.5 ore
+
+6. Taskul 6 l-am implementat prin functiile 'operatie_cod()', care ia ca parametru un pointer la un struct si 'alterare_cod()', care ia ca parametrii 2 intregi, id si cod.
+   Functia 'operatie_cod()' decide care cod trebuie sa fie modificat. Functia va compara cifra cu toate cifrele fiecarui cod si cand o gaseste, ii da codului valoarea
+   returnata de 'alterare_cod', functie care umple un vector cu 1, acolo unde pozitia este un factor prim al id-ului, iar apoi, parcurgand acest vector, efectueaza
+   operatia XOR intre cod si numarul binar format cu un singur 1 pus pe pozitia indexata de factorul prim al id-ului, de fiecare daca cand acesta gaseste valoarea 1.
+   //Taskul la care m-am chinuit cel mai mult, am reusit sa scriu cel mai imperfect cod initial astfel incat cred ca omitea toate edge-caseurile posibile, dupa ore de chin
+   //mai reuseam sa fac sa treaca un test si inca un test...pana cand am rezolvat toate problemele ~ 6 ore de lucru
+
+7. Taskul 7 l-am implementat prin functia 'punctaj_postas()', care ia ca parametrii un vector cu valorile codurilor de dinainte de alterarea acestora, un pointer la un
+   struct postas si numarul de pachete ale postasului pe care aplicam functia.
+   Pentru aceasta functie a trebuit sa creez un nested for care ia toate valorile pachetelor postasilor dinaintea alterarii acestora.
+   Functia parcurge toate pachetele si compara codurile initiale cu cele de dupa alterare, atunci cand acestea sunt lafel, ii acorda postasului un punctaj egal cu
+   1 impartit la nrPachete(pentru asta scriem 1.0f/nrPachete).
+   //~ 30 min.
+
+   //Timp total(+alte retusuri, comentarii finale, etc): ~15 ore cred?(simt ca am petrecut mult mai mult de atat gandindu-ma la probleme intampinate)
+
+
